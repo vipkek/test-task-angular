@@ -1,10 +1,18 @@
 <div class="container">
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
-    <button *ngIf="!timerStarted; else cancelBtn"
-            type="submit"
-            class="btn btn-primary mb-4">
-      Submit all forms
-    </button>
+    <div class="submit-group">
+      <button *ngIf="!timerStarted; else cancelBtn"
+              type="submit"
+              class="btn btn-primary mb-4">
+        Submit all forms
+      </button>
+
+      <ng-container *ngIf="getInvalidControlCount() as invalidCount">
+        <div *ngIf="invalidCount && errorMessage" class="error">
+          Invalid forms: {{ invalidCount }} | {{ errorMessage }}
+        </div>
+      </ng-container>
+    </div>
 
     <ng-template #cancelBtn>
       <div class="cancel-group">
@@ -19,7 +27,6 @@
       </div>
 
     </ng-template>
-
 
     <div class="d-flex flex-wrap">
       <div formArrayName="forms" class="forms flex-wrap">
@@ -43,7 +50,6 @@
           </div>
           <div class="form-group mt-2">
             <label for="username-{{i}}" class="form-label">Username</label>
-
               <input inputError
                      type="text"
                      class="form-control"
@@ -54,7 +60,6 @@
               <span tooltip
                  tooltipTitle="Try to add 'new_' before your name"
                  class="info-icon">!</span>
-
             <div class="error-messages"></div>
           </div>
           <div class="form-group mt-2">
@@ -66,14 +71,13 @@
                    formControlName="birthday"
                    placeholder="dd.mm.yyyy"
                    inputErrorControl="birthday"
-                   [formGroup]="getFormGroup(fg)"
-                   />
+                   [formGroup]="getFormGroup(fg)"/>
             <div class="error-messages"></div>
           </div>
         </div>
 
-        <div class="add-form-item mb-2">
-          <div (click)="addForm()" class="plus-btn">+</div>
+        <div (click)="addForm()" class="add-form-item mb-2">
+          <div class="plus-btn">+</div>
         </div>
       </div>
     </div>

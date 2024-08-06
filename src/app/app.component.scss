@@ -71,6 +71,16 @@
   }
 }
 
+.submit-group {
+  display: flex;
+
+  .error {
+    padding-top: .5rem;
+    margin-left: 1rem;
+    color: #d33a3a;
+  }
+}
+
 .cancel-group {
   display: flex;
 

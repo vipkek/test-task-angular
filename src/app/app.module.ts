@@ -7,6 +7,7 @@ import { MockBackendInterceptor } from './core/mock-backend/mock-backend.interce
 import { ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from './shared/shared.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import {CoreModule} from "./core/core.module";
 
 @NgModule({
   declarations: [AppComponent],
@@ -15,7 +16,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     RouterOutlet,
     NgbModule,
     ReactiveFormsModule,
-    SharedModule
+    SharedModule,
+    CoreModule
   ],
   providers: [
     provideHttpClient(withInterceptorsFromDi()),

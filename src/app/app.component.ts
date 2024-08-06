@@ -1,9 +1,16 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { debounceTime, distinctUntilChanged } from 'rxjs';
-import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-
+import {
+  AbstractControl,
+  FormArray,
+  FormBuilder,
+  FormGroup,
+  Validators
+} from '@angular/forms';
 import { Country } from './core/enum/country';
 import { formattedTime } from './core/utils/date';
+import { CustomValidatorsService } from './core/services/custom-validators.service';
+import { UserService } from './core/services/user.service';
+import { SubmitFormResponseData } from './core/interface/responses';
 
 @Component({
   selector: 'app-root',
@@ -14,9 +21,9 @@ export class AppComponent implements OnInit, OnDestroy {
 
   form: FormGroup;
   countrySuggestions: string[] = [];
-
   countries = Object.values(Country);
 
+  errorMessage = '';
   timerStarted = false;
   timeLeft: number = 60;
   interval: any;
@@ -24,7 +31,9 @@ export class AppComponent implements OnInit, OnDestroy {
   formattedTime = formattedTime;
 
   constructor(
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private userService: UserService,
+    private customValidators: CustomValidatorsService
   ) {
     this.form = this.fb.group({
       forms: this.fb.array([]),
@@ -59,29 +68,18 @@ export class AppComponent implements OnInit, OnDestroy {
 
   addForm() {
     const newForm = this.fb.group({
-      country: ['', [Validators.required, this.countryValidator.bind(this)]],
-      username: ['', Validators.required],
-      birthday: ['', Validators.required]
-    });
-
-    newForm.get('country')?.valueChanges.subscribe(value => {
-      this.filterCountries(value);
-    });
-
-    newForm.get('username')?.valueChanges
-      .pipe(
-        debounceTime(2000),
-        distinctUntilChanged()
-      )
-      .subscribe(() => {
-
+      country: ['', [Validators.required, this.customValidators.countryValidator()]],
+      username: ['', Validators.required, this.customValidators.usernameValidator()],
+      birthday: ['', [Validators.required, this.customValidators.futureDateValidator()]]
     });
 
     this.forms.push(newForm);
+    this.errorMessage = '';
   }
 
   removeForm(index: number) {
     this.forms.removeAt(index);
+    this.errorMessage = '';
   }
 
   filterCountries(event: any) {
@@ -90,8 +88,16 @@ export class AppComponent implements OnInit, OnDestroy {
     );
   }
 
-  countryValidator(control: FormControl) {
-    return this.countries.includes(control.value) ? null : { invalidCountry: true };
+  getInvalidControlCount(): number {
+    let invalidCount = 0;
+
+    this.forms.controls.forEach(control => {
+      if (control.invalid) {
+        invalidCount++;
+      }
+    });
+
+    return invalidCount;
   }
 
   startTime(): void {
@@ -107,25 +113,40 @@ export class AppComponent implements OnInit, OnDestroy {
       } else {
         this.timerStarted = false;
         clearInterval(this.interval);
+
+        this.userService.createUser(this.forms)
+          .subscribe((res: SubmitFormResponseData) => {
+            console.log('res', res)
+            this.errorMessage = '';
+            this.clearForm();
+
+            this.form.enable({ emitEvent: false });
+            this.form.markAsPristine();
+            this.form.markAsUntouched();
+          })
+
       }
     }, 1000);
   }
 
   onSubmit(): void {
-    // if (!this.form.valid) {
-    //   console.log('Form not Submitted', this.form.value);
-    //   return;
-    // }
+    if (!this.form.valid) {
+      this.errorMessage = 'Check form fields!';
+      this.form.enable();
+      return;
+    }
+
+    this.errorMessage = '';
 
     this.disableForm();
     this.timerStarted = true;
     this.startTime();
-
   }
 
   onCancel(): void {
     this.timerStarted = false;
-    this.form.enable();
+    clearInterval(this.interval);
+    this.form.enable({ emitEvent: false });
   }
 
 }

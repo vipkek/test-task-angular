@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { CheckUserResponseData } from '../interface/responses';
 import { HttpClient } from '@angular/common/http';
+import { FormArray } from "@angular/forms";
+import { Observable } from 'rxjs';
+import { CheckUserResponseData, SubmitFormResponseData } from '../interface/responses';
 
 @Injectable()
 export class UserService {
@@ -13,7 +14,7 @@ export class UserService {
     return this.http.post<CheckUserResponseData>('/api/checkUsername', { username });
   }
 
-  createUser(username: string): Observable<CheckUserResponseData> {
-    return this.http.post<CheckUserResponseData>('/api/submitForm', { username });
+  createUser(formArray: FormArray): Observable<SubmitFormResponseData> {
+    return this.http.post<SubmitFormResponseData>('/api/submitForm', formArray);
   }
 }

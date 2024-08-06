@@ -35,11 +35,9 @@ export class InputErrorDirective implements OnInit {
     if (errors.required) {
       errorMessages.push('This field is required.');
     }
-    if (errors.invalidCountry) {
-      errorMessages.push('Invalid country.');
-    }
-    if (errors.isAvailable) {
-      errorMessages.push('Please provide a correct field.');
+
+    if (errors.invalid) {
+      errorMessages.push(`Please provide a correct ${this.controlName}`);
     }
 
     return errorMessages;
