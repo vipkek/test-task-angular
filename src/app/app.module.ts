@@ -1,9 +1,11 @@
-import {NgModule} from '@angular/core';
-import {BrowserModule} from '@angular/platform-browser';
-import {AppComponent} from './app.component';
-import {RouterOutlet} from "@angular/router";
-import {HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi} from "@angular/common/http";
-import {MockBackendInterceptor} from "./shared/mock-backend/mock-backend.interceptor";
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { AppComponent } from './app.component';
+import { RouterOutlet } from '@angular/router';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { MockBackendInterceptor } from './core/mock-backend/mock-backend.interceptor';
+import { ReactiveFormsModule } from '@angular/forms';
+import { SharedModule } from './shared/shared.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
@@ -11,7 +13,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
   imports: [
     BrowserModule,
     RouterOutlet,
-    NgbModule
+    NgbModule,
+    ReactiveFormsModule,
+    SharedModule
   ],
   providers: [
     provideHttpClient(withInterceptorsFromDi()),

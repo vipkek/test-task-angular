@@ -1,7 +1,7 @@
-import {HttpHandler, HttpInterceptor, HttpRequest, HttpResponse} from '@angular/common/http';
-import {Injectable} from "@angular/core";
-import {delay, Observable, of, tap} from "rxjs";
-import {CheckUserResponseData, SubmitFormResponseData} from "../interface/responses";
+import { HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { delay, Observable, of, tap } from 'rxjs';
+import { CheckUserResponseData, SubmitFormResponseData } from '../interface/responses';
 
 @Injectable()
 export class MockBackendInterceptor implements HttpInterceptor {
@@ -14,7 +14,7 @@ export class MockBackendInterceptor implements HttpInterceptor {
       return this.handleSubmitForm();
     }
 
-    return of(new HttpResponse({ status: 404, body: { result: 'You are using the wrong endpoint'} }));
+    return of(new HttpResponse({ status: 404, body: { result: 'You are using the wrong endpoint' } }));
   }
 
   private handleCheckUsername(req: HttpRequest<any>): Observable<HttpResponse<CheckUserResponseData>> {

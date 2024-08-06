@@ -1,0 +1,81 @@
+<div class="container">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <button *ngIf="!timerStarted; else cancelBtn"
+            type="submit"
+            class="btn btn-primary mb-4">
+      Submit all forms
+    </button>
+
+    <ng-template #cancelBtn>
+      <div class="cancel-group">
+        <button *ngIf="timerStarted"
+                type="button"
+                class="btn btn-danger mb-4"
+                (click)="onCancel()">
+          Cancel
+        </button>
+
+        <div class="timer">{{ formattedTime(timeLeft) }}</div>
+      </div>
+
+    </ng-template>
+
+
+    <div class="d-flex flex-wrap">
+      <div formArrayName="forms" class="forms flex-wrap">
+        <div *ngFor="let fg of forms.controls; let i = index" [formGroupName]="i" class="form-item mb-2">
+          <button type="button" (click)="removeForm(i)" class="btn-close" aria-label="Close"></button>
+          <div class="form-group mt-2">
+            <label for="country-{{i}}" class="form-label">Country</label>
+            <input inputError
+                   type="text"
+                   class="form-control"
+                   list="country-list"
+                   formControlName="country"
+                   (input)="filterCountries($event)"
+                   id="country-{{i}}"
+                   inputErrorControl="country"
+                   [formGroup]="getFormGroup(fg)"/>
+            <datalist id="country-list">
+              <option *ngFor="let suggestion of countrySuggestions" [value]="suggestion"></option>
+            </datalist>
+            <div class="error-messages"></div>
+          </div>
+          <div class="form-group mt-2">
+            <label for="username-{{i}}" class="form-label">Username</label>
+
+              <input inputError
+                     type="text"
+                     class="form-control"
+                     id="username-{{i}}"
+                     formControlName="username"
+                     inputErrorControl="username"
+                     [formGroup]="getFormGroup(fg)"/>
+              <span tooltip
+                 tooltipTitle="Try to add 'new_' before your name"
+                 class="info-icon">!</span>
+
+            <div class="error-messages"></div>
+          </div>
+          <div class="form-group mt-2">
+            <label for="birthday-{{i}}" class="form-label">Birthday</label>
+            <input inputError
+                   type="date"
+                   class="form-control"
+                   id="birthday-{{i}}"
+                   formControlName="birthday"
+                   placeholder="dd.mm.yyyy"
+                   inputErrorControl="birthday"
+                   [formGroup]="getFormGroup(fg)"
+                   />
+            <div class="error-messages"></div>
+          </div>
+        </div>
+
+        <div class="add-form-item mb-2">
+          <div (click)="addForm()" class="plus-btn">+</div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

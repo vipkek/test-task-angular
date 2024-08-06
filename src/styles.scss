@@ -2,3 +2,29 @@
 
 /* Importing Bootstrap SCSS file. */
 @import 'bootstrap/scss/bootstrap';
+
+.tooltip-text {
+  background-color: #000;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  text-align: center;
+}
+
+.error-messages {
+  color: #d33a3a;
+  font-size: .75rem;
+}
+
+.info-icon {
+  display: block;
+  width: 1rem;
+  height: 1rem;
+  line-height: 1;
+  border: 1px solid #000;
+  border-radius: .5rem;
+  text-align: center;
+  font-size: .8rem;
+  cursor: pointer;
+}
